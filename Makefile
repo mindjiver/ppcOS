@@ -5,7 +5,7 @@ LDFLAGS=-T src/kernel.lcf -fno-builtin -msoft-float
 LOADERLFFLAGS=-T src/boot.lcf -nostdlib -fno-builtin
 DOT=dot
 IMGTYPE=-Tpng
-
+SIMICS=`which simics`
 
 all: make-all
 
@@ -13,12 +13,12 @@ docs:
 	$(DOT) $(IMGTYPE) -o doc/os.png doc/os.dot
 
 emu:
-	./scripts/start_simics.sh
+	$(SIMICS) simics/ebony-ppcOS.simics
 
 make-all: kernel loader
 
-kernel: start.o start-asm.o mm.o syscall_stubs.o uart.o
-	$(CC) $(LDFLAGS) build/syscall_stubs.o build/start.o build/start-asm.o build/mm.o build/uart.o newlib/powerpc-eabi/lib/libc.a newlib/powerpc-eabi/lib/libm.a -o kernel.ppc.elf
+kernel: start.o start-asm.o mm.o syscall_stubs.o uart.o sched.o
+	$(CC) $(LDFLAGS) build/sched.o build/syscall_stubs.o build/start.o build/start-asm.o build/mm.o build/uart.o newlib/powerpc-eabi/lib/libc.a newlib/powerpc-eabi/lib/libm.a -o kernel.ppc.elf
 	powerpc-eabi-objcopy -O binary kernel.ppc.elf kernel.ppc.bin
 
 loader:	loader.o
@@ -42,6 +42,9 @@ uart.o:
 
 syscall_stubs.o:
 	$(CC) $(CFLAGS) src/stubs/syscall_stubs.c -o build/syscall_stubs.o
+
+sched.o:
+	$(CC) $(CFLAGS) src/sched/sched.c -o build/sched.o
 
 clean:
 	rm -f kernel.ppc.elf

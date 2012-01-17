@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Joakim Östlund
+/* Copyright (c) 2012, Peter Jönsson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,19 +23,30 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "mm/mm.h"
-#include "uart/uart.h"
 #include "sched/sched.h"
+#include "uart/uart.h"
 
-void startOS()
+void procA(void);
+void procB(void);
+
+#define NUM_PROC 2;
+void (*proc_table[])(void) = {procA, procB};
+
+void schedule(void)
 {
-     /* Start the memory manager */
-     mm_init();
+  int proc = 0;
+  while(1) {
+    proc_table[proc]();
+    proc = (proc + 1) % NUM_PROC;
+  }
+}
 
-     /* Initilize the UART */
-     uart_init();
+void procA(void)
+{
+  write(1, "A\n", 2);
+}
 
-     write(1, "Hello ppcOS\n", 12);
-
-     schedule();
+void procB(void)
+{
+  write(1, "B\n", 2);
 }

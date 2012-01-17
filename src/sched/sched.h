@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Joakim Östlund
+/* Copyright (c) 2012, Peter Jönsson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,19 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "mm/mm.h"
-#include "uart/uart.h"
-#include "sched/sched.h"
+#ifndef _ppcos_sched_h_
+#define _ppcos_sched_h_
 
-void startOS()
-{
-     /* Start the memory manager */
-     mm_init();
+void schedule(void);
 
-     /* Initilize the UART */
-     uart_init();
-
-     write(1, "Hello ppcOS\n", 12);
-
-     schedule();
-}
+#endif
