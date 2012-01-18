@@ -31,17 +31,36 @@
  * Watch Dog Timer (WD)
  */
 
-void timer(U32 timeout) {
-
+void timer(U32 timeout)
+{
         // check status of TSR (Time Status Register) ?
         // decrement exception is sent to interrupt mechanism.
         // register exception handler for this.
+        U32 result = 0;
 
-        U32 upper = 0x0;
-        U32 lower = 0x1;
+        // store the timeout value in the decrement register
+        // For some reason gcc emits mtmq instruction instead of mtdec here.
+        //MTSPR(DEC, timeout)
+        //asm("mtspr %0, %1" : : "r" (timeout), "r" (DEC));
+        asm("mtdec %0" : : "r" (timeout));
+
+        // hammer the register until we reach zero.
+        while(1) {
+                MFSPR(result, DEC);
+                //printf("0x%x\n", result);
+                if (result <= 0) {
+                        break;
+                }
+        }
+}
+
+void print_tbr(void) 
+{
+        U32 upper = 0;
+        U32 lower = 0;
 
         MFSPR(upper, TBU_READ);
         MFSPR(lower, TBL_READ);
 
-        printf("0x%u 0x%u\n", upper, lower);
+        printf("0x%x 0x%x\n", upper, lower);
 }

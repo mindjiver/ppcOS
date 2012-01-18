@@ -41,7 +41,9 @@
 #define IVR   0x03F /* Interrupt Vector Prefix Register */
 
 #define MFSPR(result, spr) asm("mfspr %0, %1" : "=r" (result) : "i" (spr));
+#define MTSPR(value,  spr) asm("mtspr %0, %1" : : "r" (value), "i" (spr));
 
 void timer(U32);
+void print_tbr(void);
 
 #endif

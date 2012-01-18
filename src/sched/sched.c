@@ -32,15 +32,16 @@ void procB(void);
 #define NUM_PROC 2;
 void (*proc_table[])(void) = {procA, procB};
 
+#define TICK 0xffffff
+
 void schedule(void)
 {
         U32 proc = 0;
 
-        timer(0);
-
         while(1) {
-                //proc_table[proc]();
+                proc_table[proc]();
                 proc = (proc + 1) % NUM_PROC;
+                timer(TICK);
         }
 }
 
