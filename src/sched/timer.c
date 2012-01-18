@@ -24,21 +24,6 @@
  */
 
 #include "sched/timer.h"
-#include "uart/uart.h"
-
-#define TBU_READ 0x10C  /* Time Base Upper User for reading */ 
-#define TBL_READ 0x10D  /* Time Base Lower User for reading */
-#define TBU_WRITE 0x11C /* Time Base Upper Supervisor for writing */
-#define TBL_WRITE 0x11D /* Time Base Lower Supervisor for writing */
-
-#define DEC   0x016 /* Decrement */
-#define DECAR 0x036 /* Decrement Auto-Reload */
-#define TSR   0x150 /* Time Status Register */
-#define TCR   0x154 /* Timer Control Register */
-
-#define IVR   0x03F /* Interrupt Vector Prefix Register */
-
-#define MFSPR(result, spr) asm("mfspr %0, %1" : "=r" (result) : "i" (spr));
 
 /*
  * Decrementer Timer (DEC)

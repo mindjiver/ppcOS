@@ -24,7 +24,6 @@
  */
 
 #include "sched/sched.h"
-#include "uart/uart.h"
 #include "sched/timer.h"
 
 void procA(void);
