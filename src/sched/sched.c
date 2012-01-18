@@ -40,17 +40,17 @@ void schedule(void)
         timer(0);
 
         while(1) {
-                proc_table[proc]();
+                //proc_table[proc]();
                 proc = (proc + 1) % NUM_PROC;
         }
 }
 
 void procA(void)
 {
-        write(1, "A\n", 2);
+        printf("A\n");
 }
 
 void procB(void)
 {
-        write(1, "B\n", 2);
+        printf("B\n");
 }
