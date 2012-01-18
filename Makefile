@@ -1,4 +1,5 @@
 CC=powerpc-eabi-gcc
+OBJCOPY=powerpc-eabi-objcopy
 CFLAGS=-c -g -Wall $(INCDIRS) -fno-builtin -msoft-float
 INCDIRS=-Isrc/ -Inewlib/powerpc-eabi/include -Isrc/include
 LDFLAGS=-T src/kernel.lcf -fno-builtin -msoft-float
@@ -18,12 +19,15 @@ emu:
 make-all: kernel loader
 
 kernel: start.o start-asm.o mm.o syscall_stubs.o uart.o sched.o
-	$(CC) $(LDFLAGS) build/sched.o build/syscall_stubs.o build/start.o build/start-asm.o build/mm.o build/uart.o newlib/powerpc-eabi/lib/libc.a newlib/powerpc-eabi/lib/libm.a -o kernel.ppc.elf
-	powerpc-eabi-objcopy -O binary kernel.ppc.elf kernel.ppc.bin
+	$(CC) $(LDFLAGS) build/timer.o build/sched.o build/syscall_stubs.o build/start.o\
+					build/start-asm.o build/mm.o build/uart.o\
+					newlib/powerpc-eabi/lib/libc.a newlib/powerpc-eabi/lib/libm.a\
+					 -o kernel.ppc.elf
+	$(OBJCOPY) -O binary kernel.ppc.elf kernel.ppc.bin
 
 loader:	loader.o
 	$(CC) $(LOADERLFFLAGS) build/loader.o -o loader.ppc.elf
-	powerpc-eabi-objcopy -O binary loader.ppc.elf loader.ppc.bin
+	$(OBJCOPY) -O binary loader.ppc.elf loader.ppc.bin
 
 start.o:
 	$(CC) $(CFLAGS) src/crt0/start.c -o build/start.o
@@ -43,8 +47,11 @@ uart.o:
 syscall_stubs.o:
 	$(CC) $(CFLAGS) src/stubs/syscall_stubs.c -o build/syscall_stubs.o
 
-sched.o:
+sched.o: timer.o
 	$(CC) $(CFLAGS) src/sched/sched.c -o build/sched.o
+
+timer.o:
+	$(CC) $(CFLAGS) src/sched/timer.c -o build/timer.o
 
 clean:
 	rm -f kernel.ppc.elf
@@ -52,4 +59,3 @@ clean:
 	rm -f loader.ppc.elf
 	rm -f loader.ppc.bin
 	rm -rf build/*.o
-

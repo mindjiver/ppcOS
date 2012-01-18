@@ -23,11 +23,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _ppcos_sched_h_
-#define _ppcos_sched_h_
+#include "sched/timer.h"
+#include "uart/uart.h"
 
-#include "krntypes.h"
+#define TBU_USER 0x10C  /* Time Base Upper User for reading */ 
+#define TBL_USER 0x10D  /* Time Base Lower User for reading */
+#define TBU_SUPER 0x11C /* Time Base Upper Supervisor for writing */
+#define TBL_SUPER 0x11D /* Time Base Lower Supervisor for writing */
 
-void schedule(void);
+#define DEC   0x016 /* Decrement */
+#define DECAR 0x036 /* Decrement Auto-Reload */
+#define TSR   0x150 /* Time Status Register */
+#define TCR   0x154 /* Timer Control Register */
 
-#endif
+#define IVR   0x03F /* Interrupt Vector Prefix Register */
+
+/*
+ * Decrementer Timer (DEC)
+ * Fixed Interval Timer (FIT)
+ * Watch Dog Timer (WD)
+ */
+
+void timer(U32 timeout) {
+
+        // check status of TSR (Time Status Register) ?
+        // decrement exception is sent to interrupt mechanism.
+        // register exception handler for this.
+
+        U32 upper = 0;
+        U32 lower = 0;
+
+        asm("mfspr %0, 0x10C" : "=r" (upper));
+        asm("mfspr %0, 0x10C" : "=r" (lower));
+        
+        write(1, upper, 32);
+        write(1, lower, 32);
+}

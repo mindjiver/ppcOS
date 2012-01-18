@@ -25,6 +25,7 @@
 
 #include "sched/sched.h"
 #include "uart/uart.h"
+#include "sched/timer.h"
 
 void procA(void);
 void procB(void);
@@ -34,19 +35,22 @@ void (*proc_table[])(void) = {procA, procB};
 
 void schedule(void)
 {
-  int proc = 0;
-  while(1) {
-    proc_table[proc]();
-    proc = (proc + 1) % NUM_PROC;
-  }
+        U32 proc = 0;
+
+        timer(0);
+
+        while(1) {
+                proc_table[proc]();
+                proc = (proc + 1) % NUM_PROC;
+        }
 }
 
 void procA(void)
 {
-  write(1, "A\n", 2);
+        write(1, "A\n", 2);
 }
 
 void procB(void)
 {
-  write(1, "B\n", 2);
+        write(1, "B\n", 2);
 }

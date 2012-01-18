@@ -23,11 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _ppcos_sched_h_
-#define _ppcos_sched_h_
+#ifndef _ppcos_timer_h_
+#define _ppcos_timer_h_
 
 #include "krntypes.h"
 
-void schedule(void);
+void timer(U32);
 
 #endif
