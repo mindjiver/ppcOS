@@ -24,6 +24,7 @@
  */
 
 #include "sched/timer.h"
+#include "arch/ppc440.h"
 
 #include <stdio.h>
 

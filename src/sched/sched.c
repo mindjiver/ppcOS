@@ -23,8 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sched.h"
-#include "timer.h"
+#include "sched/sched.h"
+#include "sched/timer.h"
+#include "arch/ppc440.h"
 
 #include <stdio.h>
 

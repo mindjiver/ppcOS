@@ -27,6 +27,7 @@
 
 #include "mm/mm.h"
 #include "sched/timer.h"
+#include "arch/ppc440.h"
 
 extern U32 pid;
 

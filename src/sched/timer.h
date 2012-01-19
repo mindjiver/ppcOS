@@ -28,52 +28,6 @@
 
 #include "krntypes.h"
 
-#define TSR_ENW 0x80000000
-#define TSR_WIS 0x40000000
-#define TSR_DIS 0x8000000
-#define TSR_FIS 0x4000000
-
-// TODO: fix me. See p. 180
-#define TSR_WRS_NO_RESET   0x0
-#define TSR_WRS_CORE_RESET 0x0
-#define TSR_WRS_CHIP_RESET 0x0 
-#define TSR_WRS_SYS_RESET  0xx
-
-#define TBU_READ 0x10C  /* Time Base Upper User for reading */ 
-#define TBL_READ 0x10D  /* Time Base Lower User for reading */
-#define TBU_WRITE 0x11C /* Time Base Upper Supervisor for writing */
-#define TBL_WRITE 0x11D /* Time Base Lower Supervisor for writing */
-
-#define DEC   0x016 /* Decrement */
-#define DECAR 0x036 /* Decrement Auto-Reload */
-#define TSR   0x150 /* Time Status Register */
-#define TCR   0x154 /* Timer Control Register */
-
-#define IVR   0x03F /* Interrupt Vector Prefix Register */
-
-#define MFSPR(result, spr) asm("mfspr %0, %1" : "=r" (result) : "i" (spr));
-#define MTSPR(value,  spr) asm("mtspr %1, %0" : /* No output */: "r" (value), "i" (spr));
-
-#define WDOG_TIME_PERIOD_1         0x00000000
-#define WDOG_TIME_PERIOD_2         0x40000000
-#define WDOG_TIME_PERIOD_3         0x80000000
-#define WDOG_TIME_PERIOD_4         0xC0000000
-
-#define WDOG_RESET_CTRL_CHIP_RESET 0x10000000
-#define WDOG_RESET_CTRL_CORE_RESET 0x20000000
-#define WDOG_RESET_CTRL_SYS_RESET  0x30000000
-
-#define WDOG_INT_ENABLE            0x8000000
-#define DEC_INT_ENABLE             0x4000000
-
-#define FIT_TIME_PERIOD_1          0x0000000
-#define FIT_TIME_PERIOD_2          0x3000000
-#define FIT_TIME_PERIOD_3          0x2000000
-#define FIT_TIME_PERIOD_4          0x1000000
-
-#define FIT_INT_ENABLE             0x800000
-#define AUTO_RELOAD_ENABLE         0x400000
-
 void timer(U32);
 void print_tbr(void);
 

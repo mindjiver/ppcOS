@@ -27,7 +27,9 @@
 #include "uart/uart.h"
 #include "sched/sched.h"
 #include "irq/irq.h"
+
 #include "krntypes.h"
+
 #include <stdio.h>
 
 void startOS()

@@ -25,6 +25,9 @@
 
 #include "irq.h"
 #include "mm/mm.h"
+#include "sched/timer.h"
+#include "arch/ppc440.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -58,7 +61,6 @@ int irq_disable(void)
         asm volatile ("wrteei 0;");
 
         return 0;
-
 }
 
 int irq_init(void)
