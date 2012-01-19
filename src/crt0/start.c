@@ -38,14 +38,14 @@ void startOS()
      /* Set up initial interrupt handlers */
      irq_init();
 
-     /* Enable the interrupts */
-     irq_enable();
-
-     /* Disable all interrupts */
-//     irq_disable();
-
      /* Initilize the UART */
      uart_init();
+
+     /*
+      * Enable the interrupts. Needs to be placed after uart_init
+      * otherwise MSR[EE] will be reset for some reason.
+      */
+     irq_enable();
 
      /* start running the processes */
      schedule();
