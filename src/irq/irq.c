@@ -34,16 +34,13 @@ int irq_enable(void)
                       /* No output*/ :
                       "r" (MSR_CRTICAL_IRQ_ENABLE | MSR_EXTERNAL_IRQ_ENABLE |
                            MSR_MACHINE_CHECK_ENABLE | MSR_DEBUG_INT_ENABLE));
-
         /* 
          * Enabling of external interrupts must use special
          * operation. See page 398 of manual.
          */
         asm volatile ("wrteei 1;");
-        asm volatile ("wrteei 1;" : : : "memory");
 
         return 0;
-
 }
 
 int irq_disable(void)

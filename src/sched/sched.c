@@ -40,10 +40,18 @@ void schedule(void)
 {
         U32 proc = 0;
         
-        U32 result = 0x1;
+        //U32 result = 0x1;
 
         // fire on all timer interrupts
-        asm("mttcr %0" : /* No output */ : "r" (1023));
+        //asm("mttcr %0" : /* No output */ : "r" (1023));
+        asm("mttcr %0" : /* No output */ : "r" ( WDOG_TIME_PERIOD_2 |
+                                                 WDOG_RESET_CTRL_CHIP_RESET |
+                                                 WDOG_INT_ENABLE |
+                                                 DEC_INT_ENABLE |
+                                                 FIT_TIME_PERIOD_2 |
+                                                 FIT_INT_ENABLE));
+        
+        while(1);
 
         while(1) {
                 proc_table[proc]();
