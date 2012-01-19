@@ -28,7 +28,43 @@
 #include <stdio.h>
 #include <string.h>
 
-int irq_init()
+int irq_enable(void)
+{
+        asm volatile ("mtmsr %0; isync" :
+                      /* No output*/ :
+                      "r" (MSR_CRTICAL_IRQ_ENABLE | MSR_EXTERNAL_IRQ_ENABLE |
+                           MSR_MACHINE_CHECK_ENABLE | MSR_DEBUG_INT_ENABLE));
+
+        /* 
+         * Enabling of external interrupts must use special
+         * operation. See page 398 of manual.
+         */
+        asm volatile ("wrteei 1;");
+        asm volatile ("wrteei 1;" : : : "memory");
+
+        return 0;
+
+}
+
+int irq_disable(void)
+{
+        U32 msr = 0;
+        
+        /* We fetch all set interrupts and then mask them away. I
+         * guess we remove all the non-interrupt bits first, but that
+         * we can fix later */
+        asm volatile ("mfmsr %0;" : "=r" (msr));
+        asm volatile ("mtmsr %0;" :
+                      /* No output*/ :
+                      "r" (msr^msr));
+        /* Disable external interrupts with special operation.  */
+        asm volatile ("wrteei 0;");
+
+        return 0;
+
+}
+
+int irq_init(void)
 {
      /*
        Map the memory area that will be used for the exception handlers.
@@ -43,8 +79,11 @@ int irq_init()
        This area will be right after IVOR15.
       */
 
-     mm_map_region(IRQ_IVOR_BASE, IRQ_IVOR_BASE, 0, IRQ_IVOR_SIZE * IRQ_IVOR_COUNT, TLB_PERM_SR|TLB_PERM_SW|TLB_PERM_SX, TLB_ATTR_NONE, MM_LOCK_TLB|MM_WRITE_TLB);
-     mm_map_region(IRQ_STACK_BASE, IRQ_STACK_BASE, 0, IRQ_STACK_SIZE, TLB_PERM_SR|TLB_PERM_SW, TLB_ATTR_NONE, MM_LOCK_TLB|MM_WRITE_TLB);
+     mm_map_region(IRQ_IVOR_BASE, IRQ_IVOR_BASE, 0,
+                   IRQ_IVOR_SIZE * IRQ_IVOR_COUNT, TLB_PERM_SR|TLB_PERM_SW|TLB_PERM_SX,
+                   TLB_ATTR_NONE, MM_LOCK_TLB|MM_WRITE_TLB);
+     mm_map_region(IRQ_STACK_BASE, IRQ_STACK_BASE, 0, IRQ_STACK_SIZE,
+                   TLB_PERM_SR|TLB_PERM_SW, TLB_ATTR_NONE, MM_LOCK_TLB|MM_WRITE_TLB);
 
      /* Install the handlers */
      /* TODO: Fix defines */

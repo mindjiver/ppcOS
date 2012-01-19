@@ -55,6 +55,19 @@ extern void _ivor_data_tlb_error(void);
 extern void _ivor_instruction_tlb_error(void);
 extern void _ivor_debug(void);
 
+/* Mask for Machine Status Register (MSR) */
+#define MSR_WAIT_STATE_ENABLE     0x40000
+#define MSR_CRTICAL_IRQ_ENABLE    0x20000
+#define MSR_EXTERNAL_IRQ_ENABLE   0x08000
+#define MSR_PROBLEM_STATE         0x04000
+#define MSR_FLOAT_POINT_AVAIL     0x02000
+#define MSR_MACHINE_CHECK_ENABLE  0x01000
+#define MSR_FLOAT_POINT_EXC_MODE0 0x00800
+#define MSR_DEBUG_WAIT_ENABLE     0x00400
+#define MSR_DEBUG_INT_ENABLE      0x00200
+#define MSR_FLOAT_POINT_EXC_MODE1 0x00100
+#define MSR_INST_ADDR_SPACE       0x00020
+#define MSR_DATA_ADDR_SPACE       0x00010
 
 /* SPRs for writing IVOR */
 #define IRQ_IVOR0     0x190
@@ -74,8 +87,9 @@ extern void _ivor_debug(void);
 #define IRQ_IVOR14    0x19E
 #define IRQ_IVOR15    0x19F
 
-
-int irq_init();
+int irq_init(void);
+int irq_enable(void);
+int irq_disable(void);
 int irq_install_exception_handler(void(handler(void)), U8 ivor);
 
 #endif /* _ppcos_irq_h_ */

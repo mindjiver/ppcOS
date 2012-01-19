@@ -99,6 +99,6 @@
 #define UART_WAIT(reg) while(!(UART_READ(reg) & UART_LSR_IDLE));
 
 void uart_init();
-int write(int, char *, int);
+//int write(int, const void *, size_t);
 
 #endif  /* _ppcos_uart_h_ */

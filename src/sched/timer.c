@@ -25,6 +25,8 @@
 
 #include "sched/timer.h"
 
+#include <stdio.h>
+
 /*
  * Decrementer Timer (DEC)
  * Fixed Interval Timer (FIT)

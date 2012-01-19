@@ -38,6 +38,12 @@ void startOS()
      /* Set up initial interrupt handlers */
      irq_init();
 
+     /* Enable the interrupts */
+     irq_enable();
+
+     /* Disable all interrupts */
+//     irq_disable();
+
      /* Initilize the UART */
      uart_init();
 

@@ -23,8 +23,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sched/sched.h"
-#include "sched/timer.h"
+#include "sched.h"
+#include "timer.h"
+
+#include <stdio.h>
 
 void procA(void);
 void procB(void);
@@ -37,6 +39,11 @@ void (*proc_table[])(void) = {procA, procB};
 void schedule(void)
 {
         U32 proc = 0;
+        
+        U32 result = 0x1;
+
+        // fire on all timer interrupts
+        asm("mttcr %0" : /* No output */ : "r" (1023));
 
         while(1) {
                 proc_table[proc]();

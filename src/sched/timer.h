@@ -43,6 +43,44 @@
 #define MFSPR(result, spr) asm("mfspr %0, %1" : "=r" (result) : "i" (spr));
 #define MTSPR(value,  spr) asm("mtspr %0, %1" : : "r" (value), "i" (spr));
 
+/* 0:1 */
+#define WDOG_TIME_PERIOD_1 0x0
+#define WDOG_TIME_PERIOD_2 0x1
+#define WDOG_TIME_PERIOD_3 0x2
+#define WDOG_TIME_PERIOD_4 0x3
+
+/* 2:3 */
+#define WDOG_RESET_CTRL_CORE_RESET 0x4
+#define WDOG_RESET_CTRL_CHIP_RESET 0x8
+#define WDOG_RESET_CTRL_SYS_RESET  0xC
+
+/* 4 */
+#define WDOG_INT_ENABLE  0x10
+
+/* 5 */
+#define DEC_INT_ENABLE 0x20
+
+/* 6:7 */
+/*
+ * TCR[FP] Period for 400MHz clock
+ *
+ * 0b00    20.48 us
+ * 0b01    327.68 us
+ * 0b10    5.2 ms
+ * 0b11    83.9 ms
+ */
+//#define FIT_TIME_PERIOD_1 
+#define FIT_TIME_PERIOD_2 0x40
+#define FIT_TIME_PERIOD_3 0x60
+#define FIT_TIME_PERIOD_4 0x80
+
+/* 8 */
+#define FIT_INT_ENABLE 0x80
+
+/* 9 */
+#define AUTO_RELOAD_ENABLE 0x100
+
+
 void timer(U32);
 void print_tbr(void);
 
