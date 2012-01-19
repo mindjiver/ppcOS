@@ -34,8 +34,23 @@
 #define IRQ_STACK_BASE 0x1000
 #define IRQ_STACK_SIZE 0x400
 
-/* IVOR definitions */
-#define IRQ_IVOR_DTLB_ERR 13    /* Data TLB error (miss) */
+/* IVOR definitions */ 
+#define IRQ_IVOR_CRIT_INPUT       0
+#define IRQ_IVOR_MACH_CHECK       1
+#define IRQ_IVOR_DATA_STORE       2
+#define IRQ_IVOR_INST_STORE       3
+#define IRQ_IVOR_EXTE_INPUT       4
+#define IRQ_IVOR_ALIGNMENT        5
+#define IRQ_IVOR_PROGRAM          6
+#define IRQ_IVOR_FP_UNAVAIL       7
+#define IRQ_IVOR_SYST_CALL        8
+#define IRQ_IVOR_AUX_PROC_UNAVAIL 9
+#define IRQ_IVOR_DECREMENTER      10
+#define IRQ_IVOR_FIXED_TIME       11
+#define IRQ_IVOR_WDOG_TIME        12
+#define IRQ_IVOR_DATA_TLB_ERR     13    /* Data TLB error (miss) */
+#define IRQ_IVOR_INST_TLB_ERR     14
+#define IRQ_IVOR_DEBUG            15
 
 /* Exception handler prototypes */
 extern void _ivor_critical_int(void);
@@ -58,16 +73,16 @@ extern void _ivor_debug(void);
 /* Mask for Machine Status Register (MSR) */
 #define MSR_WAIT_STATE_ENABLE     0x40000
 #define MSR_CRTICAL_IRQ_ENABLE    0x20000
-#define MSR_EXTERNAL_IRQ_ENABLE   0x08000
-#define MSR_PROBLEM_STATE         0x04000
-#define MSR_FLOAT_POINT_AVAIL     0x02000
-#define MSR_MACHINE_CHECK_ENABLE  0x01000
-#define MSR_FLOAT_POINT_EXC_MODE0 0x00800
-#define MSR_DEBUG_WAIT_ENABLE     0x00400
-#define MSR_DEBUG_INT_ENABLE      0x00200
-#define MSR_FLOAT_POINT_EXC_MODE1 0x00100
-#define MSR_INST_ADDR_SPACE       0x00020
-#define MSR_DATA_ADDR_SPACE       0x00010
+#define MSR_EXTERNAL_IRQ_ENABLE   0x8000
+#define MSR_PROBLEM_STATE         0x4000
+#define MSR_FLOAT_POINT_AVAIL     0x2000
+#define MSR_MACHINE_CHECK_ENABLE  0x1000
+#define MSR_FLOAT_POINT_EXC_MODE0 0x800
+#define MSR_DEBUG_WAIT_ENABLE     0x400
+#define MSR_DEBUG_INT_ENABLE      0x200
+#define MSR_FLOAT_POINT_EXC_MODE1 0x100
+#define MSR_INST_ADDR_SPACE       0x20
+#define MSR_DATA_ADDR_SPACE       0x10
 
 /* SPRs for writing IVOR */
 #define IRQ_IVOR0     0x190

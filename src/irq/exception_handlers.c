@@ -24,7 +24,11 @@
  */
 
 #include <stdio.h>
+
 #include "mm/mm.h"
+#include "sched/timer.h"
+
+extern U32 pid;
 
 void backupRegs()
 {
@@ -107,8 +111,6 @@ void ivor_critical_int ()
      backupRegs();
 
      printf("Critical Interrupt!!!\n");
-     while(1)
-	  ;
 
      restoreRegs();
 }
@@ -220,18 +222,31 @@ void ivor_decrementer ()
      while(1)
 	  ;
 
+     // we need to clear TSR[DIR] before re-enabling MSR[EE] otherwise
+     // we trigger a new interrupt.
+
      restoreRegs();
 }
 
 void ivor_fixed_interval_timer ()
 {
-     backupRegs();
+        U32 value = 0;
 
-     printf("Fixed Interval Timer!!!\n");
-     while(1)
-	  ;
+        backupRegs();
 
-     restoreRegs();
+        printf("Fixed Interval Timer!!!\n");
+        
+        // really aweful hack to test scheduling via timer.
+        pid++;      
+        
+        // Clear the FIS bit in the TSR.
+        MFSPR(value, TSR);
+        value = value ^ TSR_FIS;
+        asm volatile ("mttsr %0" : /* No output */: "r" (value));
+        // Re-enable the MSR[EE]
+        asm volatile ("wrteei 1;");
+
+        restoreRegs();
 }
 
 void ivor_watchdog_timer ()
@@ -243,6 +258,9 @@ void ivor_watchdog_timer ()
 	  ;
 
      restoreRegs();
+
+     // we need to clear TSR[WIS] before re-enabling MSR[CE] otherwise
+     // we trigger a new interrupt.
 }
 
 /* Note: No printf() or write() here, as we can not be sure UART memory is accessible */

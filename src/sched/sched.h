@@ -28,6 +28,8 @@
 
 #include "krntypes.h"
 
+U32 pid;
+
 void schedule(void);
 
 #endif

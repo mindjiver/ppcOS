@@ -34,29 +34,19 @@ void procB(void);
 #define NUM_PROC 2;
 void (*proc_table[])(void) = {procA, procB};
 
-#define TICK 0xffffff
+extern U32 pid;
 
 void schedule(void)
 {
         U32 proc = 0;
-        
-        //U32 result = 0x1;
 
-        // fire on all timer interrupts
-        //asm("mttcr %0" : /* No output */ : "r" (1023));
-        asm("mttcr %0" : /* No output */ : "r" ( WDOG_TIME_PERIOD_2 |
-                                                 WDOG_RESET_CTRL_CHIP_RESET |
-                                                 WDOG_INT_ENABLE |
-                                                 DEC_INT_ENABLE |
-                                                 FIT_TIME_PERIOD_2 |
-                                                 FIT_INT_ENABLE));
-        
-        while(1);
+        pid = 0;
 
+        asm("mttcr %0" : /* No output */ : "r" (FIT_TIME_PERIOD_2 | 
+                                                FIT_INT_ENABLE));
         while(1) {
+                proc = pid % NUM_PROC;
                 proc_table[proc]();
-                proc = (proc + 1) % NUM_PROC;
-                timer(TICK);
         }
 }
 
