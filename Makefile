@@ -16,7 +16,7 @@ docs:
 
 .PHONY: emu
 emu:
-	$(SIMICS) simics/ebony-ppcOS.simics
+	$(SIMICS) -no-win simics/ebony-ppcOS.simics
 
 make-all: kernel loader
 
