@@ -23,34 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sched/sched.h"
-#include "uart/uart.h"
-#include "timer/timer.h"
+#ifndef _ppcos_timer_h_
+#define _ppcos_timer_h_
 
-void procA(void);
-void procB(void);
+#include "krntypes.h"
 
-#define NUM_PROC 2;
-void (*proc_table[])(void) = {procA, procB};
+void timer(U32);
 
-void schedule(void)
-{
-        U32 proc = 0;
-
-        timer(0);
-
-        while(1) {
-                proc_table[proc]();
-                proc = (proc + 1) % NUM_PROC;
-        }
-}
-
-void procA(void)
-{
-        write(1, "A\n", 2);
-}
-
-void procB(void)
-{
-        write(1, "B\n", 2);
-}
+#endif

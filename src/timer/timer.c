@@ -23,34 +23,39 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sched/sched.h"
-#include "uart/uart.h"
 #include "timer/timer.h"
+#include "uart/uart.h"
 
-void procA(void);
-void procB(void);
+#define TBU_USER 0x10C  /* Time Base Upper User for reading */ 
+#define TBL_USER 0x10D  /* Time Base Lower User for reading */
+#define TBU_SUPER 0x11C /* Time Base Upper Supervisor for writing */
+#define TBL_SUPER 0x11D /* Time Base Lower Supervisor for writing */
 
-#define NUM_PROC 2;
-void (*proc_table[])(void) = {procA, procB};
+#define DEC   0x016 /* Decrement */
+#define DECAR 0x036 /* Decrement Auto-Reload */
+#define TSR   0x150 /* Time Status Register */
+#define TCR   0x154 /* Timer Control Register */
 
-void schedule(void)
-{
-        U32 proc = 0;
+#define IVR   0x03F /* Interrupt Vector Prefix Register */
 
-        timer(0);
+/*
+ * Decrementer Timer (DEC)
+ * Fixed Interval Timer (FIT)
+ * Watch Dog Timer (WD)
+ */
 
-        while(1) {
-                proc_table[proc]();
-                proc = (proc + 1) % NUM_PROC;
-        }
-}
+void timer(U32 timeout) {
 
-void procA(void)
-{
-        write(1, "A\n", 2);
-}
+        // check status of TSR (Time Status Register) ?
+        // decrement exception is sent to interrupt mechanism.
+        // register exception handler for this.
 
-void procB(void)
-{
-        write(1, "B\n", 2);
+        U32 upper = 0;
+        U32 lower = 0;
+
+        asm("mfspr %0, 0x10C" : "=r" (upper));
+        asm("mfspr %0, 0x10C" : "=r" (lower));
+        
+        write(1, upper, 32);
+        write(1, lower, 32);
 }
