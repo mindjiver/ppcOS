@@ -74,6 +74,10 @@ void schedule(void)
         MTTCR((FIT_TIME_PERIOD_4 | FIT_INT_ENABLE));
 
         while(1) {
+                /* Since we are co-operative here we switch off
+                 * external interrupts. The running function needs to
+                 * yield when they are done.
+                 */
                 WRTEEI(0);
                 proc = pid % NUM_PROC;
                 proc_table[proc]();
