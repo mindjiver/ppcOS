@@ -24,15 +24,11 @@
  */
 
 #include "sched/sched.h"
-<<<<<<< HEAD
-#include "sched/timer.h"
 #include "arch/ppc440.h"
+#include "log/log.h"
+#include "timer/timer.h"
 
 #include <stdio.h>
-=======
-#include "uart/uart.h"
-#include "timer/timer.h"
->>>>>>> master
 
 void procA(void);
 void procB(void);
@@ -48,7 +44,7 @@ void schedule(void)
 
         pid = 0;
 
-        asm("mttcr %0" : /* No output */ : "r" (FIT_TIME_PERIOD_2 | 
+        asm("mttcr %0" : /* No output */ : "r" (FIT_TIME_PERIOD_4 | 
                                                 FIT_INT_ENABLE));
         while(1) {
                 proc = pid % NUM_PROC;
@@ -58,10 +54,10 @@ void schedule(void)
 
 void procA(void)
 {
-        printf("A\n");
+        INFO("Process A");
 }
 
 void procB(void)
 {
-        printf("B\n");
+        INFO("Process B");
 }

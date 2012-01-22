@@ -246,8 +246,6 @@ void ivor_fixed_interval_timer ()
         MFSPR(value, TSR);
         value = value ^ TSR_FIS;
         asm volatile ("mttsr %0" : /* No output */: "r" (value));
-        // Re-enable the MSR[EE]
-        asm volatile ("wrteei 1;");
 
         restoreRegs();
 }
