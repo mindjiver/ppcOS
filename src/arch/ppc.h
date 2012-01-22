@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Joakim Östlund
+/* Copyright (c) 2012, Peter Jönsson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,35 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "mm/mm.h"
-#include "uart/uart.h"
-#include "irq/irq.h"
-#include "arch/ppc440.h"
-#include "sched/sched.h"
+#ifndef _ppcos_ppc_h_
+#define _ppcos_ppc_h_
 
-void startOS()
-{
-        /* Start the memory manager */
-        mm_init();
-        
-        /* Set up initial interrupt handlers */
-        irq_init();
-        
-        /* Initilize the UART */
-        uart_init();
-        
-        /*
-         * Enable the interrupts. Needs to be placed after uart_init
-         * otherwise MSR[EE] will be reset for some reason.
-         */
-        irq_enable();
+#define PVR_PPC440 0x40120481
 
-        /*
-         * Print some CPU information.
-         */
-        cpu_version();       
+void cpu_version(void);
 
-        /* start running the processes */
-        schedule();
-        
-}
+#endif

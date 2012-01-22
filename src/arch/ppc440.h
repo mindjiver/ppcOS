@@ -26,6 +26,8 @@
 #ifndef _ppcos_ppc440_h_
 #define _ppcos_ppc440__h_
 
+#include "arch/ppc.h"
+
 #define MTSPR(value, spr)         asm volatile ("mtspr %1, %0"   : /* No output */ : "r" (value), "i" (spr));
 #define MFSPR(result, spr)        asm volatile ("mfspr %0, %1"   : "=r" (result)   : "i" (spr));
 #define TLBRE(result, idx, word)  asm volatile ("tlbre %0,%1,%2" : "=r" (result)   : "r" (idx), "i" (word));

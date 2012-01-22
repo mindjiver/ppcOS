@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Joakim Östlund
+/* Copyright (c) 2012, Peter Jönsson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,35 +23,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "mm/mm.h"
-#include "uart/uart.h"
-#include "irq/irq.h"
+#include "arch/ppc.h"
 #include "arch/ppc440.h"
-#include "sched/sched.h"
 
-void startOS()
+#include "log/log.h"
+
+#define CPU_NAME_LEN 30
+#define CPU_INFO_LEN 255
+
+void cpu_version(void)
 {
-        /* Start the memory manager */
-        mm_init();
-        
-        /* Set up initial interrupt handlers */
-        irq_init();
-        
-        /* Initilize the UART */
-        uart_init();
-        
-        /*
-         * Enable the interrupts. Needs to be placed after uart_init
-         * otherwise MSR[EE] will be reset for some reason.
-         */
-        irq_enable();
+        U32 pvr; 
+        U32 pir;
+        char cpu_name[CPU_NAME_LEN];
+        char cpu_info[CPU_INFO_LEN];
 
-        /*
-         * Print some CPU information.
-         */
-        cpu_version();       
+        MFSPR(pvr, PVR);
+        MFSPR(pir, PIR);
 
-        /* start running the processes */
-        schedule();
-        
+        switch(pvr) {
+        case PVR_PPC440:
+                strncpy(cpu_name, "PPC440", CPU_NAME_LEN);
+                break;
+        default:
+                strncpy(cpu_name, "Unknown", CPU_NAME_LEN);
+                break;
+        }
+
+        sprintf(cpu_info, "CPU%x: %s", pir, cpu_name);
+        INFO(cpu_info);
 }
