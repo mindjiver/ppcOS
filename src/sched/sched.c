@@ -71,9 +71,7 @@ void schedule(void)
 
         pid = 0;
 
-        asm("mttcr %0" : /* No output */ : "r" (FIT_TIME_PERIOD_4 | 
-                                                FIT_INT_ENABLE));
-        //MTTCR((FIT_TIME_PERIOD_4 | FIT_INT_ENABLE));
+        MTTCR((FIT_TIME_PERIOD_4 | FIT_INT_ENABLE));
 
         while(1) {
                 WRTEEI(0);
