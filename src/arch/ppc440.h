@@ -38,6 +38,8 @@
 #define WRTEEI(value)             asm volatile ("wrteei %0"      : /* No output */ : "i" (value));
 #define MTTCR(value)              asm volatile ("mttcr %0"       : /* No output */ : "r" (value));
 #define MFTCR(result)             asm volatile ("mftcr %0"       : "=r" (result));
+#define MTDEAR(value)             asm volatile ("mtdear %0"      : /* No output */ : "r" (value));
+#define MFDEAR(result)            asm volatile ("mfdear %0"      : "=r" (result));
 
 /* Mask for Machine Status Register (MSR) */
 #define MSR_WAIT_STATE_ENABLE     0x40000

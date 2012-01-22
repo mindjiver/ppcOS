@@ -32,203 +32,194 @@
 
 extern U32 pid;
 
-void backupRegs()
+void backupRegs(void)
 {
-     /* Save all regs. r1 is saved before we enter here */
-     /* This mess should be re-written */
-     asm volatile (
-	"stw	0,0x1080(0);"
-	"stw	2,0x1008(0);"
-	"stw	3,0x100C(0);"
-	"stw	4,0x1010(0);"
-	"stw	5,0x1014(0);"
-	"stw	6,0x1018(0);"
-	"stw	7,0x101C(0);"
-	"stw	8,0x1020(0);"
-	"stw	9,0x1024(0);"
-	"stw	10,0x1028(0);"
-	"stw	11,0x102C(0);"
-	"stw	12,0x1030(0);"
-	"stw	13,0x1034(0);"
-	"stw	14,0x1038(0);"
-	"stw	15,0x103C(0);"
-	"stw	16,0x1040(0);"
-	"stw	17,0x1044(0);"
-	"stw	18,0x1048(0);"
-	"stw	19,0x104C(0);"
-	"stw	20,0x1050(0);"
-	"stw	21,0x1054(0);"
-	"stw	22,0x1058(0);"
-	"stw	23,0x105C(0);"
-	"stw	24,0x1060(0);"
-	"stw	25,0x1064(0);"
-	"stw	26,0x1068(0);"
-	"stw	27,0x106C(0);"
-	"stw	28,0x1070(0);"
-	"stw	29,0x1074(0);"
-	"stw	30,0x1078(0);"
-	"stw	31,0x107C(0)"
-	  );
+        /* Save all regs. r1 is saved before we enter here */
+        /* This mess should be re-written */
+        asm volatile (
+                "stw	0,0x1080(0);"
+                "stw	2,0x1008(0);"
+                "stw	3,0x100C(0);"
+                "stw	4,0x1010(0);"
+                "stw	5,0x1014(0);"
+                "stw	6,0x1018(0);"
+                "stw	7,0x101C(0);"
+                "stw	8,0x1020(0);"
+                "stw	9,0x1024(0);"
+                "stw	10,0x1028(0);"
+                "stw	11,0x102C(0);"
+                "stw	12,0x1030(0);"
+                "stw	13,0x1034(0);"
+                "stw	14,0x1038(0);"
+                "stw	15,0x103C(0);"
+                "stw	16,0x1040(0);"
+                "stw	17,0x1044(0);"
+                "stw	18,0x1048(0);"
+                "stw	19,0x104C(0);"
+                "stw	20,0x1050(0);"
+                "stw	21,0x1054(0);"
+                "stw	22,0x1058(0);"
+                "stw	23,0x105C(0);"
+                "stw	24,0x1060(0);"
+                "stw	25,0x1064(0);"
+                "stw	26,0x1068(0);"
+                "stw	27,0x106C(0);"
+                "stw	28,0x1070(0);"
+                "stw	29,0x1074(0);"
+                "stw	30,0x1078(0);"
+                "stw	31,0x107C(0)"
+                );
 }
 
-void restoreRegs()
+void restoreRegs(void)
 {
-     /* Restore all regs. r1 will be restored later */
-     asm volatile (
-	"lwz	0,0x1080(0);"
-	"lwz	2,0x1008(0);"
-	"lwz	3,0x100C(0);"
-	"lwz	4,0x1010(0);"
-	"lwz	5,0x1014(0);"
-	"lwz	6,0x1018(0);"
-	"lwz	7,0x101C(0);"
-	"lwz	8,0x1020(0);"
-	"lwz	9,0x1024(0);"
-	"lwz	10,0x1028(0);"
-	"lwz	11,0x102C(0);"
-	"lwz	12,0x1030(0);"
-	"lwz	13,0x1034(0);"
-	"lwz	14,0x1038(0);"
-	"lwz	15,0x103C(0);"
-	"lwz	16,0x1040(0);"
-	"lwz	17,0x1044(0);"
-	"lwz	18,0x1048(0);"
-	"lwz	19,0x104C(0);"
-	"lwz	20,0x1050(0);"
-	"lwz	21,0x1054(0);"
-	"lwz	22,0x1058(0);"
-	"lwz	23,0x105C(0);"
-	"lwz	24,0x1060(0);"
-	"lwz	25,0x1064(0);"
-	"lwz	26,0x1068(0);"
-	"lwz	27,0x106C(0);"
-	"lwz	28,0x1070(0);"
-	"lwz	29,0x1074(0);"
-	"lwz	30,0x1078(0);"
-	"lwz	31,0x107C(0)"
-	  );
+        /* Restore all regs. r1 will be restored later */
+        asm volatile (
+                "lwz	0,0x1080(0);"
+                "lwz	2,0x1008(0);"
+                "lwz	3,0x100C(0);"
+                "lwz	4,0x1010(0);"
+                "lwz	5,0x1014(0);"
+                "lwz	6,0x1018(0);"
+                "lwz	7,0x101C(0);"
+                "lwz	8,0x1020(0);"
+                "lwz	9,0x1024(0);"
+                "lwz	10,0x1028(0);"
+                "lwz	11,0x102C(0);"
+                "lwz	12,0x1030(0);"
+                "lwz	13,0x1034(0);"
+                "lwz	14,0x1038(0);"
+                "lwz	15,0x103C(0);"
+                "lwz	16,0x1040(0);"
+                "lwz	17,0x1044(0);"
+                "lwz	18,0x1048(0);"
+                "lwz	19,0x104C(0);"
+                "lwz	20,0x1050(0);"
+                "lwz	21,0x1054(0);"
+                "lwz	22,0x1058(0);"
+                "lwz	23,0x105C(0);"
+                "lwz	24,0x1060(0);"
+                "lwz	25,0x1064(0);"
+                "lwz	26,0x1068(0);"
+                "lwz	27,0x106C(0);"
+                "lwz	28,0x1070(0);"
+                "lwz	29,0x1074(0);"
+                "lwz	30,0x1078(0);"
+                "lwz	31,0x107C(0)"
+                );
 }
 
-void ivor_critical_int ()
+void ivor_critical_int(void)
 {
      backupRegs();
 
-     printf("Critical Interrupt!!!\n");
+     INFO("Critical Interrupt!!!");
+     while(1);
 
      restoreRegs();
 }
 
-void ivor_machine_check ()
+void ivor_machine_check(void)
 {
      backupRegs();
 
-     printf("Machine Check!!!\n");
-     while(1)
-	  ;
+     INFO("Machine Check!!!");
+     while(1);
 
      restoreRegs();
 }
 
-void ivor_data_storage ()
+void ivor_data_storage(void)
 {
      backupRegs();
 
-     printf("Data storage!!!\n");
-     while(1)
-	  ;
+     INFO("Data storage!!!");
+     while(1);
 
      restoreRegs();
 }
 
-void ivor_instruction_storage ()
+void ivor_instruction_storage(void)
 {
      backupRegs();
 
-     printf("Instruction storage!!!\n");
-     while(1)
-	  ;
+     INFO("Instruction storage!!!");
+     while(1);
 
      restoreRegs();
 }
 
-void ivor_external_input ()
+void ivor_external_input(void)
 {
-     backupRegs();
+        backupRegs();
+        
+        INFO("External input!!!");
+        while(1);
 
-     printf("External input!!!\n");
-     while(1)
-	  ;
-
-     restoreRegs();
+        restoreRegs();
 }
 
-void ivor_alignment ()
+void ivor_alignment(void)
 {
-     backupRegs();
+        backupRegs();
 
-     printf("Alignment!!!\n");
-     while(1)
-	  ;
+        INFO("Alignment!!!");
+        while(1);
 
-     restoreRegs();
+        restoreRegs();
 }
 
-void ivor_program ()
+void ivor_program(void)
 {
-     backupRegs();
+        backupRegs();
+        
+        INFO("Program!!!");
+        while(1);
 
-     printf("Program!!!\n");
-     while(1)
-	  ;
-
-     restoreRegs();
+        restoreRegs();
 }
 
-void ivor_fp_unavail ()
+void ivor_fp_unavail(void)
 {
-     backupRegs();
-
-     printf("FP Unavailable!!!\n");
-     while(1)
-	  ;
-
-     restoreRegs();
+        backupRegs();
+        
+        INFO("FP Unavailable!!!");
+        while(1);
+        
+        restoreRegs();
 }
 
-void ivor_system_call ()
+void ivor_system_call(void)
 {
-     backupRegs();
-
-     printf("System Call!!!\n");
-     while(1)
-	  ;
-
-     restoreRegs();
+        backupRegs();
+        
+        INFO("System Call!!!");
+        while(1);
+        
+        restoreRegs();
 }
 
-void ivor_ap_unavail ()
+void ivor_ap_unavail(void)
 {
-     backupRegs();
-
-     printf("AP Unavailable!!!\n");
-     while(1)
-	  ;
-
-     restoreRegs();
+        backupRegs();
+        
+        INFO("AP Unavailable!!!");
+        while(1);
+        
+        restoreRegs();
 }
 
-void ivor_decrementer ()
+void ivor_decrementer(void)
 {
-     backupRegs();
+        backupRegs();
+        
+        INFO("Decrementer!!!");
+        while(1);
 
-     printf("Decrementer!!!\n");
-     while(1)
-	  ;
-
-     // we need to clear TSR[DIR] before re-enabling MSR[EE] otherwise
-     // we trigger a new interrupt.
-
-     restoreRegs();
+        // we need to clear TSR[DIR] before re-enabling MSR[EE] otherwise
+        // we trigger a new interrupt.
+        
+        restoreRegs();
 }
 
 void ivor_fixed_interval_timer ()
@@ -237,8 +228,6 @@ void ivor_fixed_interval_timer ()
 
         backupRegs();
 
-        INFO("Fixed Interval Timer!");
-        
         // Clear the FIS bit in the TSR.
         MFSPR(value, TSR);
         value = value ^ TSR_FIS;
@@ -247,13 +236,12 @@ void ivor_fixed_interval_timer ()
         restoreRegs();
 }
 
-void ivor_watchdog_timer ()
+void ivor_watchdog_timer(void)
 {
      backupRegs();
 
-     printf("Watchdog Timer!!!\n");
-     while(1)
-	  ;
+     INFO("Watchdog Timer!!!");
+     while(1);
 
      restoreRegs();
 
@@ -261,47 +249,41 @@ void ivor_watchdog_timer ()
      // we trigger a new interrupt.
 }
 
-/* Note: No printf() or write() here, as we can not be sure UART memory is accessible */
-
-void ivor_data_tlb_error()
+/* Note: No printf() or write() here, as we can not be sure UART
+ * memory is accessible */
+void ivor_data_tlb_error(void)
 {
      U32 dear;
 
      backupRegs();
 
-     asm volatile (
-	  "mfdear %0"
-	  : "=r"(dear)
-	  );
+     MFDEAR(dear);
 
      if(mm_load_tlb_entry(dear) == EERROR)
      {
-	  /* Call error handler here */
-	  while(1)
-	       ;
+             /* Call error handler here */
+             while(1);
      }
      
      restoreRegs();
 }
 
-void ivor_instruction_tlb_error ()
+void ivor_instruction_tlb_error(void)
 {
      backupRegs();
 
-     printf("Instruction TLB error!!!\n");
-     while(1)
-	  ;
+     INFO("Instruction TLB error!!!");
+     while(1);
 
      restoreRegs();
 }
 
-void ivor_debug ()
+void ivor_debug(void)
 {
      backupRegs();
 
-     printf("Debug!!!\n");
-     while(1)
-	  ;
+     INFO("Debug!!!");
+     while(1);
 
      restoreRegs();
 }
