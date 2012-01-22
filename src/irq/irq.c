@@ -54,12 +54,10 @@ int irq_disable(void)
         /* We fetch all set interrupts and then mask them away. I
          * guess we remove all the non-interrupt bits first, but that
          * we can fix later */
-        asm volatile ("mfmsr %0;" : "=r" (msr));
-        asm volatile ("mtmsr %0;" :
-                      /* No output*/ :
-                      "r" (msr^msr));
+        MFMSR(msr);
+        MTMSR(msr^msr);
         /* Disable external interrupts with special operation.  */
-        asm volatile ("wrteei 0;");
+        WRTEEI(0);
 
         return 0;
 }

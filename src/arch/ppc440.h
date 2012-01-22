@@ -26,13 +26,16 @@
 #ifndef _ppcos_ppc440_h_
 #define _ppcos_ppc440__h_
 
-#define MTSPR(value, spr)         asm volatile ("mtspr %1, %0;"   : /* No output */ : "r"(value), "i"(spr));
-#define MFSPR(result, spr)        asm volatile ("mfspr %0, %1"    : "=r" (result)   : "i" (spr));
-#define TLBRE(result, idx, word)  asm volatile ("tlbre %0,%1,%2;" : "=r"(result)    : "r"(idx), "i"(word));
-#define TLBWE(value, idx, word)   asm volatile ("tlbwe %0,%1,%2;" : /* No output */ : "r"(value), "r"(idx), "i"(word));
-#define ISYNC                     asm volatile ("isync;");
-#define MTMSR(value)              asm volatile ("mtmsr %0;"       : /* No output */ : "r"(value));
-#define MFMSR(result)             asm volatile ("mfmsr %0"        : "=r" (result));
+#define MTSPR(value, spr)         asm volatile ("mtspr %1, %0"   : /* No output */ : "r" (value), "i" (spr));
+#define MFSPR(result, spr)        asm volatile ("mfspr %0, %1"   : "=r" (result)   : "i" (spr));
+#define TLBRE(result, idx, word)  asm volatile ("tlbre %0,%1,%2" : "=r" (result)   : "r" (idx), "i" (word));
+#define TLBWE(value, idx, word)   asm volatile ("tlbwe %0,%1,%2" : /* No output */ : "r" (value), "r" (idx), "i" (word));
+#define ISYNC                     asm volatile ("isync");
+#define MTMSR(value)              asm volatile ("mtmsr %0"       : /* No output */ : "r" (value));
+#define MFMSR(result)             asm volatile ("mfmsr %0"       : "=r" (result));
+#define WRTEEI(value)             asm volatile ("wrteei %0"      : /* No output */ : "i" (value));
+#define MTTCR(value)              asm volatile ("mttcr %0"       : /* No output */ : "r" (value));
+#define MFTCR(result)             asm volatile ("mftcr %0"       : "=r" (result));
 
 /* Mask for Machine Status Register (MSR) */
 #define MSR_WAIT_STATE_ENABLE     0x40000

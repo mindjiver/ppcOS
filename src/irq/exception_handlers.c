@@ -239,9 +239,6 @@ void ivor_fixed_interval_timer ()
 
         INFO("Fixed Interval Timer!");
         
-        // really aweful hack to test scheduling via timer.
-        pid++;      
-        
         // Clear the FIS bit in the TSR.
         MFSPR(value, TSR);
         value = value ^ TSR_FIS;

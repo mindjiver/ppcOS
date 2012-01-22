@@ -32,9 +32,36 @@
 
 void procA(void);
 void procB(void);
+void procC(void);
+void procD(void);
+void procE(void);
+void procF(void);
+void procG(void);
 
-#define NUM_PROC 2;
-void (*proc_table[])(void) = {procA, procB};
+#define NUM_PROC 7;
+void (*proc_table[])(void) = {procA, procB, procC, procD, procE, procF, procG};
+
+/**
+ *
+ * Co-operative multi tasking here. Each function needs to call this
+ * function when they are "done". 
+ * 
+ * Increment the Process ID counter
+ * Re-enable External Interrupts.
+ * Switch Machine State Register to wait for the next interrupt.
+ *
+ */
+void yield()
+{
+        U32 msr = 0;
+        
+        pid++;
+
+        WRTEEI(1);
+        MFMSR(msr);
+        msr = msr | MSR_WAIT_STATE_ENABLE;
+        MTMSR(msr);
+}
 
 extern U32 pid;
 
@@ -46,7 +73,10 @@ void schedule(void)
 
         asm("mttcr %0" : /* No output */ : "r" (FIT_TIME_PERIOD_4 | 
                                                 FIT_INT_ENABLE));
+        //MTTCR((FIT_TIME_PERIOD_4 | FIT_INT_ENABLE));
+
         while(1) {
+                WRTEEI(0);
                 proc = pid % NUM_PROC;
                 proc_table[proc]();
         }
@@ -54,10 +84,43 @@ void schedule(void)
 
 void procA(void)
 {
+        U32 msr;
         INFO("Process A");
+        yield();
 }
 
 void procB(void)
 {
         INFO("Process B");
+        yield();
+}
+
+void procC(void)
+{
+        INFO("Process C");
+        yield();
+}
+
+void procD(void)
+{
+        INFO("Process D");
+        yield();
+}
+
+void procE(void)
+{
+        INFO("Process E");
+        yield();
+}
+
+void procF(void)
+{
+        INFO("Process F");
+        yield();
+}
+
+void procG(void)
+{
+        INFO("Process G");
+        yield();
 }
