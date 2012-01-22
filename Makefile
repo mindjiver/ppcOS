@@ -46,11 +46,11 @@ uart.o:
 syscall_stubs.o:
 	$(CC) $(CFLAGS) src/stubs/syscall_stubs.c -o build/syscall_stubs.o
 
-sched.o: timer.o
+sched.o:
 	$(CC) $(CFLAGS) src/sched/sched.c -o build/sched.o
 
 timer.o:
-	$(CC) $(CFLAGS) src/sched/timer.c -o build/timer.o
+	$(CC) $(CFLAGS) src/timer/timer.c -o build/timer.o
 
 exception_handlers.o:
 	$(CC) $(CFLAGS) src/irq/exception_handlers.c -o build/exception_handlers.o

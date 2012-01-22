@@ -23,45 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "sched/sched.h"
-<<<<<<< HEAD
-#include "sched/timer.h"
-#include "arch/ppc440.h"
+#ifndef _ppcos_timer_h_
+#define _ppcos_timer_h_
 
-#include <stdio.h>
-=======
-#include "uart/uart.h"
-#include "timer/timer.h"
->>>>>>> master
+#include "krntypes.h"
 
-void procA(void);
-void procB(void);
+void timer(U32);
 
-#define NUM_PROC 2;
-void (*proc_table[])(void) = {procA, procB};
-
-extern U32 pid;
-
-void schedule(void)
-{
-        U32 proc = 0;
-
-        pid = 0;
-
-        asm("mttcr %0" : /* No output */ : "r" (FIT_TIME_PERIOD_2 | 
-                                                FIT_INT_ENABLE));
-        while(1) {
-                proc = pid % NUM_PROC;
-                proc_table[proc]();
-        }
-}
-
-void procA(void)
-{
-        printf("A\n");
-}
-
-void procB(void)
-{
-        printf("B\n");
-}
+#endif
