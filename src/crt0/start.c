@@ -27,25 +27,21 @@
 #include "uart/uart.h"
 #include "sched/sched.h"
 #include "irq/irq.h"
+
 #include "krntypes.h"
+
 #include <stdio.h>
 
 void startOS()
 {
-/*     U8 *p = (U8 *)(0xFFFFCCDD); */
-
      /* Start the memory manager */
      mm_init();
-
-     /* Initilize the UART */
-     uart_init();
 
      /* Set up initial interrupt handlers */
      irq_init();
 
-     /*printf("Causing a Data TLB error\n");
-     
-      *p = 0;*/
+     /* Initilize the UART */
+     uart_init();
 
      /* start running the processes */
      schedule();

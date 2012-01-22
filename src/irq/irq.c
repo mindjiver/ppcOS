@@ -25,6 +25,8 @@
 
 #include "irq.h"
 #include "mm/mm.h"
+#include "arch/ppc440.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -43,161 +45,95 @@ int irq_init()
        This area will be right after IVOR15.
       */
 
-     mm_map_region(IRQ_IVOR_BASE, IRQ_IVOR_BASE, 0, IRQ_IVOR_SIZE * IRQ_IVOR_COUNT, TLB_PERM_SR|TLB_PERM_SW|TLB_PERM_SX, TLB_ATTR_NONE);
-     mm_map_region(IRQ_STACK_BASE, IRQ_STACK_BASE, 0, IRQ_STACK_SIZE, TLB_PERM_SR|TLB_PERM_SW, TLB_ATTR_NONE);
-
-     printf("Installing exception handlers...");
+     mm_map_region(IRQ_IVOR_BASE, IRQ_IVOR_BASE, 0, IRQ_IVOR_SIZE * IRQ_IVOR_COUNT,
+		   TLB_PERM_SR|TLB_PERM_SW|TLB_PERM_SX, TLB_ATTR_NONE, MM_LOCK_TLB|MM_WRITE_TLB);
+     mm_map_region(IRQ_STACK_BASE, IRQ_STACK_BASE, 0, IRQ_STACK_SIZE,
+		   TLB_PERM_SR|TLB_PERM_SW, TLB_ATTR_NONE, MM_LOCK_TLB|MM_WRITE_TLB);
 
      /* Install the handlers */
-     /* TODO: Fix defines */
-     irq_install_exception_handler(_ivor_critical_int, 0);
-     irq_install_exception_handler(_ivor_machine_check, 1);
-     irq_install_exception_handler(_ivor_data_storage, 2);
-     irq_install_exception_handler(_ivor_instruction_storage, 3);
-     irq_install_exception_handler(_ivor_external_input, 4);
-     irq_install_exception_handler(_ivor_alignment, 5);
-     irq_install_exception_handler(_ivor_program, 6);
-     irq_install_exception_handler(_ivor_fp_unavail, 7);
-     irq_install_exception_handler(_ivor_system_call, 8);
-     irq_install_exception_handler(_ivor_ap_unavail, 9);
-     irq_install_exception_handler(_ivor_decrementer, 10);
-     irq_install_exception_handler(_ivor_fixed_interval_timer, 11);
-     irq_install_exception_handler(_ivor_watchdog_timer, 12);
-     irq_install_exception_handler(_ivor_data_tlb_error, IRQ_IVOR_DTLB_ERR);
-     irq_install_exception_handler(_ivor_instruction_tlb_error, 14);
-     irq_install_exception_handler(_ivor_debug, 15);
-
-     printf("Done!\n");
+     irq_install_exception_handler(_ivor_critical_int, IRQ_IVOR_CRIT_INPUT);
+     irq_install_exception_handler(_ivor_machine_check, IRQ_IVOR_MACH_CHECK);
+     irq_install_exception_handler(_ivor_data_storage, IRQ_IVOR_DATA_STORE);
+     irq_install_exception_handler(_ivor_instruction_storage, IRQ_IVOR_INST_STORE);
+     irq_install_exception_handler(_ivor_external_input, IRQ_IVOR_EXTE_INPUT);
+     irq_install_exception_handler(_ivor_alignment, IRQ_IVOR_ALIGNMENT);
+     irq_install_exception_handler(_ivor_program, IRQ_IVOR_PROGRAM);
+     irq_install_exception_handler(_ivor_fp_unavail, IRQ_IVOR_FP_UNAVAIL);
+     irq_install_exception_handler(_ivor_system_call, IRQ_IVOR_SYST_CALL);
+     irq_install_exception_handler(_ivor_ap_unavail, IRQ_IVOR_AUX_PROC_UNAVAIL);
+     irq_install_exception_handler(_ivor_decrementer, IRQ_IVOR_DECREMENTER);
+     irq_install_exception_handler(_ivor_fixed_interval_timer, IRQ_IVOR_FIXED_TIME);
+     irq_install_exception_handler(_ivor_watchdog_timer, IRQ_IVOR_WDOG_TIME);
+     irq_install_exception_handler(_ivor_data_tlb_error, IRQ_IVOR_DATA_TLB_ERR);
+     irq_install_exception_handler(_ivor_instruction_tlb_error, IRQ_IVOR_INST_TLB_ERR);
+     irq_install_exception_handler(_ivor_debug, IRQ_IVOR_DEBUG);
 
      return 0;
 }
 
 int irq_install_exception_handler(void(handler(void)), U8 ivor)
 {
-     U32 ivorAddr;
+        U32 ivorAddr;
 
-     if( ivor > 15 )
-	  return -1;
+        if( ivor > 15 )
+                return -1;
 
-     memcpy((void *)(IRQ_IVOR_BASE + IRQ_IVOR_SIZE * ivor), handler, IRQ_IVOR_SIZE);
+        memcpy((void *)(IRQ_IVOR_BASE + IRQ_IVOR_SIZE * ivor), handler, IRQ_IVOR_SIZE);
+        
+        ivorAddr = (IRQ_IVOR_BASE + IRQ_IVOR_SIZE * ivor);
+        
+        /* How to do this in a good way? We can not pass the SPR number with "=r"... */
 
-     ivorAddr = (IRQ_IVOR_BASE + IRQ_IVOR_SIZE * ivor);
+        switch(IRQ_IVOR0 + ivor) {
+        case IRQ_IVOR0:
+                MTSPR(ivorAddr, IRQ_IVOR0);
+                break;
+        case IRQ_IVOR1:
+                MTSPR(ivorAddr, IRQ_IVOR1);
+                break;
+        case IRQ_IVOR2:
+                MTSPR(ivorAddr, IRQ_IVOR2);                
+                break;
+        case IRQ_IVOR3:
+                MTSPR(ivorAddr, IRQ_IVOR3);
+                break;
+        case IRQ_IVOR4:
+                MTSPR(ivorAddr, IRQ_IVOR4);
+                break;
+        case IRQ_IVOR5:
+                MTSPR(ivorAddr, IRQ_IVOR5);
+                break;
+        case IRQ_IVOR6:
+                MTSPR(ivorAddr, IRQ_IVOR6);
+                break;
+        case IRQ_IVOR7:
+                MTSPR(ivorAddr, IRQ_IVOR7);
+                break;
+        case IRQ_IVOR8:
+                MTSPR(ivorAddr, IRQ_IVOR8);
+                break;
+        case IRQ_IVOR9:
+                MTSPR(ivorAddr, IRQ_IVOR9);
+                break;
+        case IRQ_IVOR10:
+                MTSPR(ivorAddr, IRQ_IVOR10);
+                break;
+        case IRQ_IVOR11:
+                MTSPR(ivorAddr, IRQ_IVOR11);
+                break;
+        case IRQ_IVOR12:
+                MTSPR(ivorAddr, IRQ_IVOR12);
+                break;
+        case IRQ_IVOR13:
+                MTSPR(ivorAddr, IRQ_IVOR13);
+                break;
+        case IRQ_IVOR14:
+                MTSPR(ivorAddr, IRQ_IVOR14);
+                break;
+        case IRQ_IVOR15:
+                MTSPR(ivorAddr, IRQ_IVOR15);
+                break;
+        }
 
-     /* How to do this in a good way? We can not pass the SPR number with "=r"... */
-
-     switch(IRQ_IVOR0 + ivor) {
-     case IRQ_IVOR0:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR0)
-	       );
-	  break;
-     case IRQ_IVOR1:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR1)
-	       );
-	  break;
-     case IRQ_IVOR2:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR2)
-	       );
-	  break;
-     case IRQ_IVOR3:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR3)
-	       );
-	  break;
-     case IRQ_IVOR4:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR4)
-	       );
-	  break;
-     case IRQ_IVOR5:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR5)
-	       );
-	  break;
-     case IRQ_IVOR6:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR6)
-	       );
-	  break;
-     case IRQ_IVOR7:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR7)
-	       );
-	  break;
-     case IRQ_IVOR8:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR8)
-	       );
-	  break;
-     case IRQ_IVOR9:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR9)
-	       );
-	  break;
-     case IRQ_IVOR10:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR10)
-	       );
-	  break;
-     case IRQ_IVOR11:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR11)
-	       );
-	  break;
-     case IRQ_IVOR12:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR12)
-	       );
-	  break;
-     case IRQ_IVOR13:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR13)
-	       );
-	  break;
-     case IRQ_IVOR14:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR14)
-	       );
-	  break;
-     case IRQ_IVOR15:
-	  asm volatile (
-	       "mtspr %1, %0;"
-	       : /* No output */
-	       : "r"(ivorAddr), "i"(IRQ_IVOR15)
-	       );
-	  break;
-     }
-     return 0;
+        return 0;
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Joakim Östlund
+ /* Copyright (c) 2011, Joakim Östlund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,30 +23,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _ppcos_irq_h_
-#define _ppcos_irq_h_
+#ifndef _ppcos_log_h_
+#define _ppcos_log_h_
 
 #include "krntypes.h"
 
-/* Exception handler prototypes */
-extern void _ivor_critical_int(void);
-extern void _ivor_machine_check(void);
-extern void _ivor_data_storage(void);
-extern void _ivor_instruction_storage(void);
-extern void _ivor_external_input(void);
-extern void _ivor_alignment(void);
-extern void _ivor_program(void);
-extern void _ivor_fp_unavail(void);
-extern void _ivor_system_call(void);
-extern void _ivor_ap_unavail(void);
-extern void _ivor_decrementer(void);
-extern void _ivor_fixed_interval_timer(void);
-extern void _ivor_watchdog_timer(void);
-extern void _ivor_data_tlb_error(void);
-extern void _ivor_instruction_tlb_error(void);
-extern void _ivor_debug(void);
+#define LOG_INFO     0
+#define LOG_WARNING  1
+#define LOG_ERROR    2
+#define LOG_TYPE_MAX 2
 
-int irq_init();
-int irq_install_exception_handler(void(handler(void)), U8 ivor);
+#define LOG(msg, type) write_log(__FILE__, __LINE__, __FUNCTION__, msg, type)
+#define INFO(msg) LOG(msg, LOG_INFO)
+#define WARNING(msg) LOG(msg, LOG_WARNING)
+#define ERROR(msg) LOG(msg, LOG_ERROR)
 
-#endif /* _ppcos_irq_h_ */
+void write_log(char *filename, U32 lineno, const char *function, const char *message, U8 type);
+
+#endif  /* _ppcos_log_h_ */

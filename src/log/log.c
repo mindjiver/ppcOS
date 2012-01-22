@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Joakim Östlund
+ /* Copyright (c) 2011, Joakim Östlund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,30 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _ppcos_irq_h_
-#define _ppcos_irq_h_
+#include "log.h"
+#include <stdio.h>
 
-#include "krntypes.h"
+char *msgTypes[] = { "INFO", "WARNING", "ERROR" };
+char *strNull = "NULL";
 
-/* Exception handler prototypes */
-extern void _ivor_critical_int(void);
-extern void _ivor_machine_check(void);
-extern void _ivor_data_storage(void);
-extern void _ivor_instruction_storage(void);
-extern void _ivor_external_input(void);
-extern void _ivor_alignment(void);
-extern void _ivor_program(void);
-extern void _ivor_fp_unavail(void);
-extern void _ivor_system_call(void);
-extern void _ivor_ap_unavail(void);
-extern void _ivor_decrementer(void);
-extern void _ivor_fixed_interval_timer(void);
-extern void _ivor_watchdog_timer(void);
-extern void _ivor_data_tlb_error(void);
-extern void _ivor_instruction_tlb_error(void);
-extern void _ivor_debug(void);
+void write_log(char *filename, U32 lineno, const char *function, const char *message, U8 type)
+{
+     if( !filename )
+	  filename = strNull;
+     if( !function )
+	  function = strNull;
+     if( !message )
+	  message = strNull;
+     if( type > LOG_TYPE_MAX )
+	  type = LOG_TYPE_MAX;
 
-int irq_init();
-int irq_install_exception_handler(void(handler(void)), U8 ivor);
-
-#endif /* _ppcos_irq_h_ */
+     /* TODO: Add timestamps */
+     printf("%s:%u %s %s: %s\n", filename, lineno, function, msgTypes[type], message);
+}

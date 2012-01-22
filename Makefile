@@ -61,6 +61,9 @@ asm_exception_handlers.o:
 irq.o:
 	$(CC) $(CFLAGS) src/irq/irq.c -o build/irq.o
 
+log.o:
+	$(CC) $(CFLAGS) src/log/log.c -o build/log.o
+
 .PHONY: clean
 
 clean:
