@@ -28,8 +28,6 @@
 #include "log/log.h"
 #include "timer/timer.h"
 
-#include <stdio.h>
-
 void procA(void);
 void procB(void);
 void procC(void);
@@ -72,6 +70,8 @@ void schedule(void)
         pid = 0;
 
         MTTCR((FIT_TIME_PERIOD_4 | FIT_INT_ENABLE));
+
+        INFO("Starting round robin scheduling");
 
         while(1) {
                 /* Since we are co-operative here we switch off

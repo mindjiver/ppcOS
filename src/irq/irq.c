@@ -23,26 +23,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "irq.h"
+#include "irq/irq.h"
 #include "mm/mm.h"
 #include "sched/timer.h"
-
 #include "arch/ppc440.h"
-
-#include <stdio.h>
-#include <string.h>
+#include "log/log.h"
 
 int irq_enable(void)
 {
-        /* asm volatile ("mtmsr %0; isync" : */
-        /*               /\* No output*\/ : */
-        /*               "r" (MSR_CRTICAL_IRQ_ENABLE | MSR_EXTERNAL_IRQ_ENABLE | */
-        /*                    MSR_MACHINE_CHECK_ENABLE | MSR_DEBUG_INT_ENABLE)); */
+        INFO("Enabling interrupts");
+
+        MTMSR((MSR_CRTICAL_IRQ_ENABLE |
+               MSR_EXTERNAL_IRQ_ENABLE |
+               MSR_MACHINE_CHECK_ENABLE |
+               MSR_DEBUG_INT_ENABLE));
         /* 
          * Enabling of external interrupts must use special
          * operation. See page 398 of manual.
          */
-        asm volatile ("wrteei 1;");
+        WRTEEI(1);
 
         return 0;
 }
@@ -50,6 +49,8 @@ int irq_enable(void)
 int irq_disable(void)
 {
         U32 msr = 0;
+
+        INFO("Disabling all interrupts");
         
         /* We fetch all set interrupts and then mask them away. I
          * guess we remove all the non-interrupt bits first, but that
