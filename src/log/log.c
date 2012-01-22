@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Joakim Östlund
+ /* Copyright (c) 2011, Joakim Östlund
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,68 +23,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "log.h"
+#include <stdio.h>
 
-/* Define memory locations for text and data */
+char *msgTypes[] = { "INFO", "WARNING", "ERROR" };
+char *strNull = "NULL";
 
-MEMORY
+void write_log(char *filename, U32 lineno, const char *function, const char *message, U8 type)
 {
-	data	: ORIGIN = 0x00F00000, LENGTH = 0x0070000
-	heap	: ORIGIN = 0x00F70000, LENGTH = 0x0090000
-	text	: ORIGIN = 0x01000000, LENGTH = 0x0100000
-}
+     if( !filename )
+	  filename = strNull;
+     if( !function )
+	  function = strNull;
+     if( !message )
+	  message = strNull;
+     if( type > LOG_TYPE_MAX )
+	  type = LOG_TYPE_MAX;
 
-/* Define program entry point */
-
-ENTRY(_start)
-
-/* Define regions for linked file */
-
-SECTIONS
-{
-	/* .data section contains static data (e.g. strings etc) */
-	.data :
-	{
-		*(.data)
-		*(.data.*)
-		*(.rodata)
-		*(.sbss)
-	} > data
-
-	.bss :
-	{
-		*(.bss)
-	} > data
-
-	.heap :
-	AT ( ADDR(.data) + SIZEOF (.data) )
-	{
-		heap_low = .;
-		. = . + 0x80000;
-		heap_top = .;
-		. = . + (0x10000 - 0x10); /* 64k stack */
-		stack_top = .;
-	} > heap
-	/* .text contains compiled code */
-	.text :
-	{
-		*(.start)
-		*(.text)
-		*(.text.*)
-		*(.ivor)
-		*(.init)
-		*(.fini)
-	} > text
-
-	/* Put C++ constructors and destructors at the end of the text block */
-	.ctors : 
-	{
-		*(.ctors)
-		*(.ctors.*)
-	} > text
-
-	.dtors : 
-	{
-		*(.dtors)
-		*(.dtors.*)
-	} > text
+     /* TODO: Add timestamps */
+     printf("%s:%u %s %s: %s\n", filename, lineno, function, msgTypes[type], message);
 }
