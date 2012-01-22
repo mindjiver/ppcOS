@@ -84,7 +84,6 @@ void schedule(void)
 
 void procA(void)
 {
-        U32 msr;
         INFO("Process A");
         yield();
 }
