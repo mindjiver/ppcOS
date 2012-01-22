@@ -27,6 +27,7 @@
 #include "uart/uart.h"
 #include "sched/sched.h"
 #include "irq/irq.h"
+#include "timer/timer.h"
 
 #include "krntypes.h"
 
@@ -45,4 +46,5 @@ void startOS()
 
      /* start running the processes */
      schedule();
+
 }
