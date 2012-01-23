@@ -23,6 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <string.h>
+#include <stdio.h>
+
 #include "arch/ppc.h"
 #include "arch/ppc440.h"
 

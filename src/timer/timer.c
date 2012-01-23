@@ -23,20 +23,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdio.h>
+
 #include "timer/timer.h"
-#include "uart/uart.h"
-
-#define TBU_USER 0x10C  /* Time Base Upper User for reading */ 
-#define TBL_USER 0x10D  /* Time Base Lower User for reading */
-#define TBU_SUPER 0x11C /* Time Base Upper Supervisor for writing */
-#define TBL_SUPER 0x11D /* Time Base Lower Supervisor for writing */
-
-#define DEC   0x016 /* Decrement */
-#define DECAR 0x036 /* Decrement Auto-Reload */
-#define TSR   0x150 /* Time Status Register */
-#define TCR   0x154 /* Timer Control Register */
-
-#define IVR   0x03F /* Interrupt Vector Prefix Register */
+#include "arch/ppc440.h"
 
 /*
  * Decrementer Timer (DEC)
@@ -53,9 +43,9 @@ void timer(U32 timeout) {
         U32 upper = 0;
         U32 lower = 0;
 
-        asm("mfspr %0, 0x10C" : "=r" (upper));
-        asm("mfspr %0, 0x10C" : "=r" (lower));
+        MFSPR(upper, TBU_READ);
+        MFSPR(lower, TBL_READ);
         
-        write(1, upper, 32);
-        write(1, lower, 32);
+        printf("0x%u 0x%u\n", upper, lower);
+
 }

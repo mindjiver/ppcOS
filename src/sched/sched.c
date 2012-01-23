@@ -33,11 +33,6 @@
 
 void procA(void);
 void procB(void);
-void procC(void);
-void procD(void);
-void procE(void);
-void procF(void);
-void procG(void);
 
 #define PROC_NAME_LEN 255
 #define GPR_NUM 32
@@ -45,10 +40,6 @@ void procG(void);
 
 typedef struct pcb
 {
-        char name[PROC_NAME_LEN];
-        U32 pid;
-        U32 ppid;
-        void (*pc)(void);
         U32 gpr[32];
         U32 xer;
         U32 tbl;
@@ -58,8 +49,16 @@ typedef struct pcb
         U32 lr;
         U32 spr[4];
         U32 usprg0;
-        struct pcb *next;
 } pcb;
+
+typedef struct process {
+        char name[PROC_NAME_LEN];
+        U32 pid;
+        U32 ppid;
+        void (*entry)(void);
+        struct pcb pcb;
+        struct process *next;
+} process;
 
 /**
  *
@@ -85,14 +84,17 @@ void yield()
 
 extern U32 pid;
 
-pcb *create_proc(char *name, U32 ppid, void (*func)(void))
+process *create_proc(char *name, U32 ppid, void (*func)(void))
 {
-        pcb *proc = malloc(sizeof(pcb));
+        process *proc = malloc(sizeof(process));
 
         strncpy(proc->name, name, PROC_NAME_LEN);
         proc->pid = pid++;
         proc->ppid = ppid;
-        proc->pc = func;
+        proc->entry = func;
+
+        // clear the cpu registers.
+        memset(&(proc->pcb), 0, sizeof(pcb));
 
         return proc;
 }
@@ -103,10 +105,10 @@ void schedule(void)
 
         INFO("Starting round robin scheduling");
 
-        pcb *proc_a = create_proc("Process A", 0, procA);
-        pcb *proc_b = create_proc("Process B", 0, procB);
+        process *proc_a = create_proc("Process A", 0, procA);
+        process *proc_b = create_proc("Process B", 0, procB);
 
-        pcb *current = proc_a;
+        process *current = proc_a;
 
         proc_a->next = proc_b;
         proc_b->next = proc_a;
@@ -119,7 +121,7 @@ void schedule(void)
                  * yield when they are done.
                  */
                 WRTEEI(0);
-                current->pc();
+                current->entry();
                 current = current->next;
         }
 }
@@ -136,32 +138,3 @@ void procB(void)
         yield();
 }
 
-void procC(void)
-{
-        INFO("Process C");
-        yield();
-}
-
-void procD(void)
-{
-        INFO("Process D");
-        yield();
-}
-
-void procE(void)
-{
-        INFO("Process E");
-        yield();
-}
-
-void procF(void)
-{
-        INFO("Process F");
-        yield();
-}
-
-void procG(void)
-{
-        INFO("Process G");
-        yield();
-}
