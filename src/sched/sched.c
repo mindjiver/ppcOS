@@ -31,6 +31,7 @@
 #include "log/log.h"
 #include "timer/timer.h"
 
+void _idle(void);
 void procA(void);
 void procB(void);
 
@@ -105,11 +106,13 @@ void schedule(void)
 
         INFO("Starting round robin scheduling");
 
+        process *idle   = create_proc("Idle", 0, _idle);
         process *proc_a = create_proc("Process A", 0, procA);
         process *proc_b = create_proc("Process B", 0, procB);
 
-        process *current = proc_a;
+        process *current = idle;
 
+        idle->next   = proc_a;
         proc_a->next = proc_b;
         proc_b->next = proc_a;
 
@@ -124,6 +127,12 @@ void schedule(void)
                 current->entry();
                 current = current->next;
         }
+}
+
+void _idle(void)
+{
+        INFO("OS idle");
+        yield();
 }
 
 void procA(void)
