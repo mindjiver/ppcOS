@@ -23,6 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "sched/sched.h"
 #include "arch/ppc440.h"
 #include "log/log.h"
@@ -36,8 +39,27 @@ void procE(void);
 void procF(void);
 void procG(void);
 
-#define NUM_PROC 7;
-void (*proc_table[])(void) = {procA, procB, procC, procD, procE, procF, procG};
+#define PROC_NAME_LEN 255
+#define GPR_NUM 32
+#define SPR_NUM 4
+
+typedef struct pcb
+{
+        char name[PROC_NAME_LEN];
+        U32 pid;
+        U32 ppid;
+        void (*pc)(void);
+        U32 gpr[32];
+        U32 xer;
+        U32 tbl;
+        U32 tbu;
+        U32 cr;
+        U32 ctr;
+        U32 lr;
+        U32 spr[4];
+        U32 usprg0;
+        struct pcb *next;
+} pcb;
 
 /**
  *
@@ -63,24 +85,42 @@ void yield()
 
 extern U32 pid;
 
+pcb *create_proc(char *name, U32 ppid, void (*func)(void))
+{
+        pcb *proc = malloc(sizeof(pcb));
+
+        strncpy(proc->name, name, PROC_NAME_LEN);
+        proc->pid = pid++;
+        proc->ppid = ppid;
+        proc->pc = func;
+
+        return proc;
+}
+
 void schedule(void)
 {
-        U32 proc = 0;
-
-        pid = 0;
-
         MTTCR((FIT_TIME_PERIOD_4 | FIT_INT_ENABLE));
 
         INFO("Starting round robin scheduling");
 
-        while(1) {
+        pcb *proc_a = create_proc("Process A", 0, procA);
+        pcb *proc_b = create_proc("Process B", 0, procB);
+
+        pcb *current = proc_a;
+
+        proc_a->next = proc_b;
+        proc_b->next = proc_a;
+
+        //MTMSR(MSR_PROBLEM_STATE);
+
+        while(current->next != NULL) {
                 /* Since we are co-operative here we switch off
                  * external interrupts. The running function needs to
                  * yield when they are done.
                  */
                 WRTEEI(0);
-                proc = pid % NUM_PROC;
-                proc_table[proc]();
+                current->pc();
+                current = current->next;
         }
 }
 

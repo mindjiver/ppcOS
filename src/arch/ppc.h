@@ -26,7 +26,7 @@
 #ifndef _ppcos_ppc_h_
 #define _ppcos_ppc_h_
 
-#define PVR_PPC440 0x40120481
+#define PVR_PPC440GP 0x40120481
 
 void cpu_version(void);
 

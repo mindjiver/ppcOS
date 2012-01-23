@@ -42,8 +42,8 @@ void cpu_version(void)
         MFSPR(pir, PIR);
 
         switch(pvr) {
-        case PVR_PPC440:
-                strncpy(cpu_name, "PPC440", CPU_NAME_LEN);
+        case PVR_PPC440GP:
+                strncpy(cpu_name, "PPC440GP", CPU_NAME_LEN);
                 break;
         default:
                 strncpy(cpu_name, "Unknown", CPU_NAME_LEN);

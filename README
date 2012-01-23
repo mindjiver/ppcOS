@@ -7,3 +7,4 @@ Drivers will be provided for the UART and Ethernet parts of the
 Ebony PPC440GP board.
 
 Finally, a small shell and IP stack will be implemented.
+

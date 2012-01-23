@@ -40,6 +40,10 @@
 #define MFTCR(result)             asm volatile ("mftcr %0"       : "=r" (result));
 #define MTDEAR(value)             asm volatile ("mtdear %0"      : /* No output */ : "r" (value));
 #define MFDEAR(result)            asm volatile ("mfdear %0"      : "=r" (result));
+#define MTDCR(value)              asm volatile ("mtdcr %0"       : /* No output */ : "r" (value));
+#define MFDCR(result)             asm volatile ("mfdcr %0"       : "=r" (result));
+
+#define STW(value, word)          asm volatile ("stw %0, %1"     : /* No output */  : "r" (word), "r" (value));
 
 /* Mask for Machine Status Register (MSR) */
 #define MSR_WAIT_STATE_ENABLE     0x40000
@@ -183,7 +187,7 @@
 #define TSR_WRS_NO_RESET   0x0
 #define TSR_WRS_CORE_RESET 0x0
 #define TSR_WRS_CHIP_RESET 0x0 
-#define TSR_WRS_SYS_RESET  0xx
+#define TSR_WRS_SYS_RESET  0x0
 
 #define WDOG_TIME_PERIOD_1         0x00000000
 #define WDOG_TIME_PERIOD_2         0x40000000
